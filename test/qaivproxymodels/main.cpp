@@ -5,10 +5,10 @@
 #include <QSignalSpy>
 #include <QStandardItemModel>
 
-#include <qaiv.h>
-#include <qadvancedtableview.h>
-#include <qcheckstateproxymodel.h>
-#include <quniquevaluesproxymodel.h>
+#include <QAIV.h>
+#include <QAdvancedTableView.h>
+#include <QCheckStateProxyModel.h>
+#include <QUniqueValuesProxyModel.h>
 
 Q_DECLARE_METATYPE(QModelIndex)
 

@@ -32,13 +32,16 @@ LIBS += -L$${DESTDIR} -l$${QAIVLIB}
 
 !isEmpty(DESIGNER_PLUGINS_DESTDIR): DESTDIR = $${DESIGNER_PLUGINS_DESTDIR}
 
-HEADERS += qadvancedtableviewplugin.h \
-           qaivdesignercollection.h
+HEADERS += \
+           QAIVDesignerCollection.h \
+           QAdvancedTableViewPlugin.h
 
-SOURCES += qadvancedtableviewplugin.cpp \
-           qaivdesignercollection.cpp
+SOURCES += \
+           QAIVDesignerCollection.cpp \
+           QAdvancedTableViewPlugin.cpp
 
-RESOURCES += qaivdesigner.qrc
+RESOURCES += \
+    QAIVDesigner.qrc
 
 #Install the plugin in the designer plugins directory.
 target.path = $$[QT_INSTALL_PLUGINS]/designer

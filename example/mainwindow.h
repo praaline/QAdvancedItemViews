@@ -26,7 +26,7 @@
 
 class QStandardItemModel;
 class QGroupingProxyModel;
-#include <qfiltermodelproxy.h>
+#include <QFilterModelProxy.h>
 
 namespace Ui {
     class MainWindow;

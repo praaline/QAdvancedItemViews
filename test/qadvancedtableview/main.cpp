@@ -2,9 +2,9 @@
 
 #include <QStandardItemModel>
 
-#include <qadvancedtableview.h>
-#include <qabstractfilter.h>
-#include <qtextfilter.h>
+#include <QAdvancedTableView.h>
+#include <QAbstractFilter.h>
+#include <QTextFilter.h>
 
 class QAdvancedTableViewTest: public QObject
 {

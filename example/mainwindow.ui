@@ -45,6 +45,13 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="commandInsertRows">
+           <property name="text">
+            <string>Insert Rows</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
             <widget class="QAdvancedTableView" name="filterTableView" native="true"/>
@@ -70,7 +77,7 @@ p, li { white-space: pre-wrap; }
                 <string>...</string>
                </property>
                <property name="icon">
-                <iconset>
+                <iconset resource="../qaivlib/QAIV.qrc">
                  <normaloff>:/qaiv/pin/enabled</normaloff>:/qaiv/pin/enabled</iconset>
                </property>
                <property name="iconSize">
@@ -388,7 +395,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>1349</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="fileMenu">
@@ -485,21 +492,22 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>QAdvancedTableView</class>
    <extends>QWidget</extends>
-   <header>qadvancedtableview.h</header>
+   <header>QAdvancedTableView.h</header>
   </customwidget>
   <customwidget>
    <class>QSearchBar</class>
    <extends>QWidget</extends>
-   <header>qsearchbar.h</header>
+   <header>QSearchBar.h</header>
   </customwidget>
   <customwidget>
    <class>QTableModelExportPushButton</class>
    <extends>QPushButton</extends>
-   <header>qtablemodelexportpushbutton.h</header>
+   <header>QTableModelExportPushButton.h</header>
   </customwidget>
  </customwidgets>
  <resources>
   <include location="example.qrc"/>
+  <include location="../qaivlib/QAIV.qrc"/>
  </resources>
  <connections>
   <connection>

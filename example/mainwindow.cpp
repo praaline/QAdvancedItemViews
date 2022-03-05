@@ -31,22 +31,22 @@
 #include <QStandardItemModel>
 #include <QTime>
 
-#include <qadvancedheaderview.h>
-#include <qconditionaldecorationdialog.h>
-#include <qconditionaldecorationproxymodel.h>
-#include <qfiltermodel.h>
-#include <qfiltermodelproxy.h>
-#include <qfilterviewconnector.h>
-#include <qgroupingproxymodel.h>
-#include <qconditionaldecoration.h>
-#include <qfixedrowstableview.h>
-#include <qmimedatautil.h>
-#include <qrangefilter.h>
-#include <quniquevaluesproxymodel.h>
-#include <qselectionlistfilter.h>
-#include <qtablemodelwriter.h>
-#include <qtextfilter.h>
-#include <qvaluefilter.h>
+#include <QAdvancedHeaderView.h>
+#include <QConditionalDecorationDialog.h>
+#include <QConditionalDecorationProxyModel.h>
+#include <QFilterModel.h>
+#include <QFilterModelProxy.h>
+#include <QFilterViewConnector.h>
+#include <QGroupingProxyModel.h>
+#include <QConditionalDecoration.h>
+#include <QFixedRowsTableView.h>
+#include <QMimeDataUtil.h>
+#include <QRangeFilter.h>
+#include <QUniqueValuesProxyModel.h>
+#include <QSelectionListFilter.h>
+#include <QTableModelWriter.h>
+#include <QTextFilter.h>
+#include <QValueFilter.h>
 
 #include "spinboxitemdelegate.h"
 
@@ -496,6 +496,8 @@ void MainWindow::initModel()
 
 void MainWindow::initTabAdvancedTableView()
 {
+
+
     connect(ui->filterTableView->filterProxyModel(), SIGNAL(resultCountChanged(int,int)), this, SLOT(advancedTableViewResultChanged(int,int)));
     connect(ui->filterTableView->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
 
@@ -503,6 +505,16 @@ void MainWindow::initTabAdvancedTableView()
     p->setSourceModel(m_model);
     ui->filterTableView->setModel(p);
     ui->filterTableView->setFilterProxyModel(new FilterProxyModel(this));
+
+
+    connect(ui->commandInsertRows, &QPushButton::clicked, this, [=]() {
+        ui->filterTableView->setModel(nullptr);
+
+        QList<QStandardItem *> items;
+        items << new QStandardItem("This is a test");
+        m_model->insertRow(0, items);
+        if (p->sourceModel()) p->setSourceModel(nullptr); else p->setSourceModel(m_model);
+    });
 
 #if QT_VERSION >= 0x050000
     ui->filterTableView->horizontalHeader()->setSectionsClickable(true);

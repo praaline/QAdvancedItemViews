@@ -2,9 +2,9 @@
 
 #include <QStandardItemModel>
 
-#include <qaiv.h>
-#include <qadvancedtableview.h>
-#include <quniquevaluesproxymodel.h>
+#include <QAIV.h>
+#include <QAdvancedTableView.h>
+#include <QUniqueValuesProxyModel.h>
 
 class QAIVTest: public QObject
 {
