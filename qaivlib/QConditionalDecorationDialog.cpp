@@ -31,6 +31,7 @@
 
 #include <QDebug>
 #include <QLineEdit>
+#include <QComboBox>
 
 //#include "UngroupProxyModel.h"
 
@@ -121,7 +122,7 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
         // add combo box to column 0
         QComboBox* cb = columnComboBox();
         cb->setCurrentIndex(properties.value("column", index.column()).toInt());
-        connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::columnComboBoxActivated);
+        connect(cb, QOverload<int>::of(&QComboBox::activated), this, &QConditionalDecorationDialog::columnComboBoxActivated);
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_COLUMN, cb);
         //
         cb = conditionsComboBox();
@@ -168,7 +169,7 @@ void QConditionalDecorationDialog::addPushButtonClicked()
     //
     QComboBox* cb = columnComboBox();
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_COLUMN, cb);
-    connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::columnComboBoxActivated);
+    connect(cb, QOverload<int>::of(&QComboBox::activated), this, &QConditionalDecorationDialog::columnComboBoxActivated);
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_CONDITION, conditionsComboBox());
     ValueEdit* ve = valueEdit();
     ve->setColumn(0);
@@ -287,7 +288,7 @@ QComboBox* QConditionalDecorationDialog::conditionsComboBox()
     cb->addItem(tr("ends with"), QConditionalDecoration::EndsWith);
     cb->addItem(tr("starts not with"), QConditionalDecoration::StartsNotWith);
     cb->addItem(tr("ends not with"), QConditionalDecoration::EndsNotWith);
-    connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::comparisonComboBoxActivated);
+    connect(cb, QOverload<int>::of(&QComboBox::activated), this, &QConditionalDecorationDialog::comparisonComboBoxActivated);
     return cb;
 }
 
@@ -374,7 +375,7 @@ SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWid
     QSingleColumnProxyModel* columnProxy = new QSingleColumnProxyModel(this);
     columnProxy->setSourceModelColumn(column);
     columnProxy->setSourceModel(model);
-    connect(m_columnsComboBox, &QComboBox::activated, columnProxy, &QSingleColumnProxyModel::setSourceModelColumn);
+    connect(m_columnsComboBox, QOverload<int>::of(&QComboBox::activated), columnProxy, &QSingleColumnProxyModel::setSourceModelColumn);
 
     QUniqueValuesProxyModel* valueProxy = new QUniqueValuesProxyModel(this);
     valueProxy->setModelColumn(0);
