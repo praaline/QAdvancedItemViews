@@ -22,7 +22,6 @@
 #include "QUniqueValuesProxyModel.h"
 
 #include <QDebug>
-#include <QTime>
 
 #define MT QHash
 
@@ -129,8 +128,6 @@ void QUniqueValuesProxyModel::buildMap()
     if (sourceModel() == 0) {
         return;
     }
-    QTime t;
-    t.start();
     MT<QString, QList<int> >::Iterator it;
     int c = sourceModel()->rowCount();
     int max = 0;

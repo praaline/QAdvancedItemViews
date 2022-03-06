@@ -30,7 +30,7 @@ void qMimeDataAddCsv(QMimeData* mimeData, QAbstractItemModel* model, QItemSelect
                 l << "\"" + index.data(role).toString() + "\"";
             }
         }
-        stream << l.join(";") << endl;
+        stream << l.join(";") << Qt::endl;
     }
     mimeData->setData("text/csv", d);
 }
@@ -86,20 +86,20 @@ void qMimeDataAddHtml(QMimeData* mimeData, QAbstractItemModel* model, QItemSelec
                     } else if (r.tokenType() == QXmlStreamReader::Comment) {
                         stream.writeComment(r.text().toString());
                     } else if (r.tokenType() == QXmlStreamReader::EndElement) {
-                        if (r.name() == "html") {
-                        } else if (r.name() == "body") {
+                        if (r.name() == QLatin1String("html")) {
+                        } else if (r.name() == QLatin1String("body")) {
                         } else {
-                            if (r.name() == "head") {
+                            if (r.name() == QLatin1String("head")) {
                                 inhibit = false;
                             } else {
                                 stream.writeEndElement();
                             }
                         }
                     } else if (r.tokenType() == QXmlStreamReader::StartElement) {
-                        if (r.name() == "html") {
-                        } else if (r.name() == "body") {
+                        if (r.name() == QLatin1String("html")) {
+                        } else if (r.name() == QLatin1String("body")) {
                         } else {
-                            if (r.name() == "head") {
+                            if (r.name() == QLatin1String("head")) {
                                 inhibit = true;
                             }
                             if (!inhibit) {
@@ -147,7 +147,7 @@ void qMimeDataAddPlainText(QMimeData* mimeData, QAbstractItemModel* model, QItem
                 l << index.data(role).toString();
             }
         }
-        stream << l.join("\t") << endl;
+        stream << l.join("\t") << Qt::endl;
     }
     mimeData->setData("text/plain", d);
 }

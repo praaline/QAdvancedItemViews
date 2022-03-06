@@ -29,6 +29,7 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLineEdit>
+#include <QRegularExpression>
 
 #include "QClickableLabel.h"
 
@@ -46,10 +47,6 @@ QRegExpFilterEditor::QRegExpFilterEditor(QWidget* parent)
     m_sensitivityLabel = new QClickableLabel(this);
     connect(m_sensitivityLabel, SIGNAL(clicked(Qt::MouseButtons)), this, SLOT(sensitivityLabelClicked(Qt::MouseButtons)));
     l->addWidget(m_sensitivityLabel);
-
-    m_wildcardCheckBox = new QCheckBox(this);
-    m_wildcardCheckBox->setText(tr("W"));
-    l->addWidget(m_wildcardCheckBox);
 
     setFocusProxy(m_patternEdit);
 
@@ -83,14 +80,6 @@ QString QRegExpFilterEditor::pattern() const
     return m_patternEdit->text();
 }
 
-QRegExp::PatternSyntax QRegExpFilterEditor::patternSyntax() const
-{
-    //if (m_wildcardCheckBox->isChecked()){
-    //    return QRegExp::Wildcard;
-    //}
-    return QRegExp::RegExp;
-}
-
 void QRegExpFilterEditor::setCaseSensitivity(Qt::CaseSensitivity sensitivity)
 {
     if (sensitivity == Qt::CaseSensitive) {
@@ -108,20 +97,13 @@ void QRegExpFilterEditor::setPattern(const QString &pattern)
     m_patternEdit->setText(pattern);
 }
 
-void QRegExpFilterEditor::setPatternSyntax(QRegExp::PatternSyntax patternSyntax)
-{
-    //m_wildcardCheckBox->setChecked(patternSyntax == QRegExp::Wildcard);
-}
-
-QRegExpFilter::QRegExpFilter(int row, int column) :
-    QAbstractFilter(QRegExpFilter::Type, row, column)
+QRegularExpressionFilter::QRegularExpressionFilter(int row, int column) :
+    QAbstractFilter(QRegularExpressionFilter::Type, row, column)
 {
     setProperty("caseSensitivity", Qt::CaseInsensitive);
-    // @todo change default for Qt5
-    setProperty("patternSyntax", QRegExp::RegExp);
 }
 
-QWidget* QRegExpFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
+QWidget* QRegularExpressionFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
     Q_UNUSED(delegate)
     Q_UNUSED(option)
@@ -129,7 +111,7 @@ QWidget* QRegExpFilter::createEditor(QFilterViewItemDelegate* delegate, QWidget*
     return new QRegExpFilterEditor(parent);
 }
 
-QVariant QRegExpFilter::data(int role) const
+QVariant QRegularExpressionFilter::data(int role) const
 {
     if (role == Qt::DisplayRole) {
         return QString("%1").arg(property("pattern").toString());
@@ -137,35 +119,36 @@ QVariant QRegExpFilter::data(int role) const
     return QVariant();
 }
 
-bool QRegExpFilter::matches(const QVariant & value, int type) const
+bool QRegularExpressionFilter::matches(const QVariant & value, int type) const
 {
     Q_UNUSED(type);
-    QRegExp regExp(property("pattern").toString(), static_cast<Qt::CaseSensitivity>(property("caseSensitivity").toInt()), static_cast<QRegExp::PatternSyntax>(property("patternSyntax").toInt()));
-    if (regExp.indexIn(value.toString()) == -1) {
-        return false;
-    }
-    return true;
+    QRegularExpression::PatternOptions options;
+    if (static_cast<Qt::CaseSensitivity>(property("caseSensitivity").toInt()) == Qt::CaseInsensitive)
+        options =  QRegularExpression::CaseInsensitiveOption;
+    QRegularExpression regExp(property("pattern").toString(), options);
+    QRegularExpressionMatch match = regExp.match(value.toString());
+    if (match.hasMatch())
+        return true;
+    return false;
 }
 
-void QRegExpFilter::setEditorData(QWidget * editor, const QModelIndex & index)
+void QRegularExpressionFilter::setEditorData(QWidget * editor, const QModelIndex & index)
 {
     Q_UNUSED(index)
     QRegExpFilterEditor* w = qobject_cast<QRegExpFilterEditor*>(editor);
     if (w) {
         w->setCaseSensitivity(static_cast<Qt::CaseSensitivity>(property("caseSensitivity").toInt()));
         w->setPattern(property("pattern").toString());
-        w->setPatternSyntax(static_cast<QRegExp::PatternSyntax>(property("patternSyntax").toInt()));
     }
 }
 
-void QRegExpFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
+void QRegularExpressionFilter::setModelData(QWidget* editor, QAbstractItemModel * model, const QModelIndex & index)
 {
     QRegExpFilterEditor* w = qobject_cast<QRegExpFilterEditor*>(editor);
     if (w) {
         QVariantMap p(index.data(Qt::EditRole).toMap());
         p["pattern"] = w->pattern();
         p["caseSensitivity"] = w->caseSenstivity();
-        p["patternSyntax"] = w->patternSyntax();
         if (property("enableOnCommit").toBool()) {
             p["enabled"] = true;
         }
@@ -173,20 +156,19 @@ void QRegExpFilter::setModelData(QWidget* editor, QAbstractItemModel * model, co
     }
 }
 
-void QRegExpFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
+void QRegularExpressionFilter::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
     Q_UNUSED(index)
     editor->setGeometry(option.rect);
 }
 
-QDebug operator<<(QDebug d, const QRegExpFilter & f)
+QDebug operator<<(QDebug d, const QRegularExpressionFilter & f)
 {
     d << "(QRegExpFilter:"
       << "row:" << f.row()
       << "column:" << f.column()
       << "enabled:" << f.isEnabled()
       << "caseSensitivity:" << static_cast<Qt::CaseSensitivity>(f.property("caseSensitivity").toInt())
-      << "patternSyntax" << static_cast<QRegExp::PatternSyntax>(f.property("patternSyntax").toInt())
       << "pattern:" << f.property("pattern").toString()
       << ")";
     return d.space();

@@ -23,7 +23,8 @@
 #include "QFilterEditorPopupWidget.h"
 
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QWindow>
+#include <QScreen>
 #include <QEvent>
 #include <QKeyEvent>
 
@@ -70,7 +71,7 @@ void QFilterEditorWidget::movePopup()
 {
     if (m_popup) {
         QPoint p;
-        if (m_popup->geometry().height() + mapToGlobal(pos()).y() > QApplication::desktop()->availableGeometry(this).height()) {
+        if (m_popup->geometry().height() + mapToGlobal(pos()).y() > this->window()->windowHandle()->screen()->availableGeometry().height()) {
             p = mapToGlobal(rect().topLeft());
             p.setY(p.y() - m_popup->geometry().height());
         } else {

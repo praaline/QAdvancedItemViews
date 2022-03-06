@@ -19,6 +19,8 @@
 ** If not, see <http://www.gnu.org/licenses/>.
 ******************************************************************************/
 
+#include <QIODevice>
+
 #include "QGroupingProxyModel.h"
 #include "QGroupingProxyModel_p.h"
 

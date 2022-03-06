@@ -43,19 +43,15 @@ public:
 
     QString pattern() const;
 
-    QRegExp::PatternSyntax patternSyntax() const;
-
     void setCaseSensitivity(Qt::CaseSensitivity caseSenstivity);
 
     void setPattern(const QString & pattern);
 
-    void setPatternSyntax(QRegExp::PatternSyntax patternSyntax);
 private slots:
     void sensitivityLabelClicked(Qt::MouseButtons buttons);
 private:
     Qt::CaseSensitivity m_sensitivity;
     QLineEdit* m_patternEdit;
-    QCheckBox* m_wildcardCheckBox;
     QClickableLabel* m_sensitivityLabel;
 };
 

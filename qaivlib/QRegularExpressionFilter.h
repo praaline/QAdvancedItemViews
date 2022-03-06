@@ -21,6 +21,8 @@
 #ifndef QREGULAREXPRESSIONFILTER_H
 #define QREGULAREXPRESSIONFILTER_H
 
+#include <QRegularExpression>
+
 #include "QAIVLib_global.h"
 #include "QAbstractFilter.h"
 
@@ -28,7 +30,7 @@
 /**
  * @ingroup filter
  */
-class QAIVLIBSHARED_EXPORT QRegExpFilter : public QAbstractFilter
+class QAIVLIBSHARED_EXPORT QRegularExpressionFilter : public QAbstractFilter
 {
 public:
     enum {
@@ -37,9 +39,9 @@ public:
     /**
      * Constructs a QRegExpFilter with the given @p row and @p column.
      */
-    QRegExpFilter(int row, int column);
+    QRegularExpressionFilter(int row, int column);
 
-    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index ) const;
+    QWidget* createEditor(QFilterViewItemDelegate* delegate, QWidget* parent, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     /**
       * Returns the data stored under the given @p role for this filter.
       * @see setData()
@@ -51,7 +53,7 @@ public:
     /**
      * Returns the regular expression used by this filter.
      */
-    QRegExp regExp() const;
+    QRegularExpression regExp() const;
     /**
      * Sets the contents of the given @p editor to the data for the filter at the given @p index. Note that the @p index contains information about the filter model being used.
      */
@@ -66,6 +68,6 @@ public:
     void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem & option, const QModelIndex & index);
 };
 
-QDebug operator<<(QDebug dbg, const QRegExpFilter & f);
+QDebug operator<<(QDebug dbg, const QRegularExpressionFilter & f);
 
 #endif // QREGULAREXPRESSIONFILTER_H

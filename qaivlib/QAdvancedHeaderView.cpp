@@ -93,7 +93,7 @@ void ShowMoreColumnsDialog::textEdited(const QString & text)
     //		break;
     //	}
     //}
-    m_proxy->setFilterRegExp(text);
+    m_proxy->setFilterRegularExpression(text);
 }
 
 QAdvancedHeaderView::QAdvancedHeaderView(Qt::Orientation orientation, QWidget* parent)
