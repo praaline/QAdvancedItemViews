@@ -21,6 +21,11 @@
 #ifndef QGROUPINGPROXYMODEL_P_H
 #define QGROUPINGPROXYMODEL_P_H
 
+#include <QString>
+#include <QVariant>
+#include <QList>
+#include <QMap>
+
 class QGroupingProxyModelGroup
 {
 public:

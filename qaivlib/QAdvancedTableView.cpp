@@ -118,71 +118,71 @@ QAdvancedTableView::QAdvancedTableView(QWidget *parent) :
     ui->fixedRowsTableView->setSelectionModel(new QSharedItemSelectionModel(ui->fixedRowsTableView->model(), ui->dataTableView->selectionModel(), this));
 
     // data table view
-    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
-    connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(dataViewHorizontalScrollBarSilderMoved(int)));
-    connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(dataViewHorizontalScrollBarRangeChanged(int,int)));
-    connect(ui->dataTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(dataViewHorizontalScrollBarValueChanged(int)));
-    connect(ui->dataTableView->verticalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(updateHeaderViewVerticalScrollBar(int,int)));
-    connect(ui->dataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
-    connect(ui->dataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    connect(ui->dataTableView->verticalHeader(), &QHeaderView::sectionClicked, this, &QAdvancedTableView::verticalHeaderSectionClicked);
+    connect(ui->dataTableView->horizontalScrollBar(), &QAbstractSlider::sliderMoved, this, &QAdvancedTableView::dataViewHorizontalScrollBarSilderMoved);
+    connect(ui->dataTableView->horizontalScrollBar(), &QAbstractSlider::rangeChanged, this, &QAdvancedTableView::dataViewHorizontalScrollBarRangeChanged);
+    connect(ui->dataTableView->horizontalScrollBar(), &QAbstractSlider::valueChanged, this, &QAdvancedTableView::dataViewHorizontalScrollBarValueChanged);
+    connect(ui->dataTableView->verticalScrollBar(), &QAbstractSlider::rangeChanged, this, &QAdvancedTableView::updateHeaderViewVerticalScrollBar);
+    connect(ui->dataTableView->verticalHeader(), &QHeaderView::sectionResized, this, &QAdvancedTableView::verticalHeaderSectionResized);
+    connect(ui->dataTableView, &QAdvancedTableViewProxy::focusReceived, this, &QAdvancedTableView::subviewReceivedFocus);
 
     // fixed rows view
-    connect(ui->fixedRowsTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    connect(ui->fixedRowsTableView, &QFixedRowsTableView::focusReceived, this, &QAdvancedTableView::subviewReceivedFocus);
 
     // splitted data table view view
-    connect(ui->splittedDataTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
-    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(verticalHeaderSectionResized(int,int,int)));
-    connect(ui->splittedDataTableView->verticalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(verticalHeaderSectionClicked(int)));
+    connect(ui->splittedDataTableView, &QAdvancedTableViewProxy::focusReceived, this, &QAdvancedTableView::subviewReceivedFocus);
+    connect(ui->splittedDataTableView->verticalHeader(), &QHeaderView::sectionResized, this, &QAdvancedTableView::verticalHeaderSectionResized);
+    connect(ui->splittedDataTableView->verticalHeader(), &QHeaderView::sectionClicked, this, &QAdvancedTableView::verticalHeaderSectionClicked);
 
     // filter model
-    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
-    connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
+    connect(d->filterModel, &QAbstractItemModel::modelReset, this, &QAdvancedTableView::updateHeaderViewGeometries);
+    connect(d->filterModel, &QAbstractItemModel::rowsRemoved, this, &QAdvancedTableView::updateHeaderViewGeometries);
 
     // data view proxy
-    connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
+    connect(d->dataViewProxy, &QAbstractItemModel::modelReset, this, &QAdvancedTableView::modelReset);
+    connect(d->dataViewProxy, &QAbstractItemModel::layoutChanged, this, &QAdvancedTableView::dataModelLayoutChanged);
 
     // header table view
-    connect(ui->headerTableView, SIGNAL(cornerButtonClicked()), this, SLOT(selectAll()));
-    connect(ui->headerTableView, SIGNAL(calcGeometryRequested()), this, SLOT(updateHeaderViewGeometries()));
-    connect(ui->headerTableView, SIGNAL(visibilityChanged(bool)), this, SLOT(updateHeaderViewGeometries()));
-    connect(ui->headerTableView, SIGNAL(focusReceived()), this, SLOT(subviewReceivedFocus()));
+    connect(ui->headerTableView, &QFilterView::cornerButtonClicked, this, &QAdvancedTableView::selectAll);
+    connect(ui->headerTableView, &QFilterView::calcGeometryRequested, this, &QAdvancedTableView::updateHeaderViewGeometries);
+    connect(ui->headerTableView, &QFilterView::visibilityChanged, this, &QAdvancedTableView::updateHeaderViewGeometries);
+    connect(ui->headerTableView, &QFilterView::focusReceived, this, &QAdvancedTableView::subviewReceivedFocus);
     //
-    connect(ui->headerTableView->model(), SIGNAL(rowsInserted(QModelIndex, int, int)), this, SLOT(filterAdded(QModelIndex, int, int)));
-    connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionResized(int,int,int)), this, SLOT(headerViewSectionResized(int,int,int)));
-    connect(ui->headerTableView->horizontalHeader(), SIGNAL(sectionMoved(int,int,int)), this, SLOT(horizontalHeaderViewSectionMoved(int,int,int)));
-    connect(ui->headerTableView->horizontalHeader(), SIGNAL(sortIndicatorChanged(int,Qt::SortOrder)), this, SLOT(horizontalHeaderSortIndicatorChanged(int,Qt::SortOrder)));
-    connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(rangeChanged(int,int)), this, SLOT(headerViewHorizontalScrollBarRangeChanged(int,int)));
-    connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(headerViewHorizontalScrollBarSilderMoved(int)));
-    connect(ui->headerTableView->horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(headerViewHorizontalScrollBarValueChanged(int)));
+    connect(ui->headerTableView->model(), &QAbstractItemModel::rowsInserted, this, &QAdvancedTableView::filterAdded);
+    connect(ui->headerTableView->horizontalHeader(), &QHeaderView::sectionResized, this, &QAdvancedTableView::headerViewSectionResized);
+    connect(ui->headerTableView->horizontalHeader(), &QHeaderView::sectionMoved, this, &QAdvancedTableView::horizontalHeaderViewSectionMoved);
+    connect(ui->headerTableView->horizontalHeader(), &QHeaderView::sortIndicatorChanged, this, &QAdvancedTableView::horizontalHeaderSortIndicatorChanged);
+    connect(ui->headerTableView->horizontalScrollBar(), &QAbstractSlider::rangeChanged, this, &QAdvancedTableView::headerViewHorizontalScrollBarRangeChanged);
+    connect(ui->headerTableView->horizontalScrollBar(), &QAbstractSlider::sliderMoved, this, &QAdvancedTableView::headerViewHorizontalScrollBarSilderMoved);
+    connect(ui->headerTableView->horizontalScrollBar(), &QAbstractSlider::valueChanged, this, &QAdvancedTableView::headerViewHorizontalScrollBarValueChanged);
 
     //connect(ui->headerTableView, SIGNAL(verticalHeaderWidthChangeRequested(int)), this, SLOT(verticalHeaderWidthChangeRequested(int)));
     // Forward data view signals
-    connect(ui->dataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->dataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
-    connect(ui->dataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+    connect(ui->dataTableView, &QAbstractItemView::activated, this, &QAdvancedTableView::viewActivated);
+    connect(ui->dataTableView, &QAbstractItemView::clicked, this, &QAdvancedTableView::viewClicked);
+    connect(ui->dataTableView, &QWidget::customContextMenuRequested, this, &QWidget::customContextMenuRequested);
+    connect(ui->dataTableView, &QAbstractItemView::doubleClicked, this, &QAdvancedTableView::viewDoubleClicked);
+    connect(ui->dataTableView, &QAbstractItemView::entered, this, &QAdvancedTableView::viewEntered);
+    connect(ui->dataTableView, &QAbstractItemView::pressed, this, &QAdvancedTableView::viewPressed);
+    connect(ui->dataTableView, &QAbstractItemView::viewportEntered, this, &QAdvancedTableView::viewportEntered);
 
     // Forward fixed rows view signals
-    connect(ui->fixedRowsTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->fixedRowsTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
-    connect(ui->fixedRowsTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+    connect(ui->fixedRowsTableView, &QAbstractItemView::activated, this, &QAdvancedTableView::viewActivated);
+    connect(ui->fixedRowsTableView, &QAbstractItemView::clicked, this, &QAdvancedTableView::viewClicked);
+    connect(ui->fixedRowsTableView, &QWidget::customContextMenuRequested, this, &QWidget::customContextMenuRequested);
+    connect(ui->fixedRowsTableView, &QAbstractItemView::doubleClicked, this, &QAdvancedTableView::viewDoubleClicked);
+    connect(ui->fixedRowsTableView, &QAbstractItemView::entered, this, &QAdvancedTableView::viewEntered);
+    connect(ui->fixedRowsTableView, &QAbstractItemView::pressed, this, &QAdvancedTableView::viewPressed);
+    connect(ui->fixedRowsTableView, &QAbstractItemView::viewportEntered, this, &QAdvancedTableView::viewportEntered);
 
     // Forward splitted data table view signals
-    connect(ui->splittedDataTableView, SIGNAL(activated(QModelIndex)), this, SLOT(viewActivated(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(clicked(QModelIndex)), this, SLOT(viewClicked(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(customContextMenuRequested(QPoint)), this, SIGNAL(customContextMenuRequested(QPoint)));
-    connect(ui->splittedDataTableView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(viewDoubleClicked(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(entered(QModelIndex)), this, SLOT(viewEntered(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(pressed(QModelIndex)), this, SLOT(viewPressed(QModelIndex)));
-    connect(ui->splittedDataTableView, SIGNAL(viewportEntered()), this, SIGNAL(viewportEntered()));
+    connect(ui->splittedDataTableView, &QAbstractItemView::activated, this, &QAdvancedTableView::viewActivated);
+    connect(ui->splittedDataTableView, &QAbstractItemView::clicked, this, &QAdvancedTableView::viewClicked);
+    connect(ui->splittedDataTableView, &QWidget::customContextMenuRequested, this, &QWidget::customContextMenuRequested);
+    connect(ui->splittedDataTableView, &QAbstractItemView::doubleClicked, this, &QAdvancedTableView::viewDoubleClicked);
+    connect(ui->splittedDataTableView, &QAbstractItemView::entered, this, &QAdvancedTableView::viewEntered);
+    connect(ui->splittedDataTableView, &QAbstractItemView::pressed, this, &QAdvancedTableView::viewPressed);
+    connect(ui->splittedDataTableView, &QAbstractItemView::viewportEntered, this, &QAdvancedTableView::viewportEntered);
 
     // Install event filter
     ui->dataTableView->verticalHeader()->installEventFilter(this);
@@ -245,19 +245,19 @@ QMenu *QAdvancedTableView::createStandardContextMenu(const QModelIndex & index)
     a = m->addAction(tr("Splitted View"));
     a->setCheckable(true);
     a->setChecked(viewSplitted());
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(splitView(bool)));
+    connect(a, &QAction::toggled, this, &QAdvancedTableView::splitView);
 
     a = m->addAction(tr("Fixed Rows"));
     a->setCheckable(true);
     a->setChecked(showFixedRows());
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(setShowFixedRows(bool)));
+    connect(a, &QAction::toggled, this, &QAdvancedTableView::setShowFixedRows);
 
     m->addSeparator();
 
     a = m->addAction(tr("Show Filter"));
     a->setCheckable(true);
     a->setChecked(showFilter());
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(setShowFilter(bool)));
+    connect(a, &QAction::toggled, this, &QAdvancedTableView::setShowFilter);
 
     m->addSeparator();
 
@@ -265,7 +265,7 @@ QMenu *QAdvancedTableView::createStandardContextMenu(const QModelIndex & index)
     a->setCheckable(true);
     a->setChecked(showGrid());
 
-    connect(a, SIGNAL(toggled(bool)), this, SLOT(setShowGrid(bool)));
+    connect(a, &QAction::toggled, this, &QAdvancedTableView::setShowGrid);
 
     return m;
 }
@@ -883,7 +883,7 @@ void QAdvancedTableView::setIndexWidget(const QModelIndex &index, QWidget *widge
 void QAdvancedTableView::setModel(QAbstractItemModel* model)
 {
     d->model = model;
-    connect(d->model, SIGNAL(layoutChanged(QList<QPersistentModelIndex>,QAbstractItemModel::LayoutChangeHint)), this, SLOT(viewLayoutChanged()));
+    connect(d->model, &QAbstractItemModel::layoutChanged, this, &QAdvancedTableView::viewLayoutChanged);
     ui->fixedRowsTableView->setModel(d->model);
     d->filterModel->setSourceModel(d->model);
     for(int iCol = 0; iCol < d->horizontalHeader->count(); iCol++) {
@@ -978,7 +978,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
             }
 
             it = d->columnSpareWidthParts.constBegin();
-            while (it != end) {
+            while ((it != end) && (partCount > 0)) {
                 int partWidth = (resColumnWidth / partCount) * it.value();
                 colFinalWidthList[it.key()] = partWidth;
                 ui->dataTableView->setColumnWidth(it.key(), partWidth);
@@ -997,7 +997,7 @@ void QAdvancedTableView::autoResizeColumnsToContent()
                 return;
 
             it = d->columnSpareWidthParts.constBegin();
-            while (it != end) {
+            while ((it != end) && (partCount > 0)) {
                 int partWidth = (deltaWidth / partCount) * it.value() + ui->dataTableView->columnWidth(it.key());
                 colFinalWidthList[it.key()] = partWidth;
                 ui->dataTableView->setColumnWidth(it.key(), partWidth);
@@ -1031,8 +1031,8 @@ void QAdvancedTableView::setFilterModel(QAbstractFilterModel* model)
     d->dataViewProxy->setFilterModel(d->filterModel);
     ui->headerTableView->setModel(d->filterModel);
     // filter model
-    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateHeaderViewGeometries()));
-    connect(d->filterModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(updateHeaderViewGeometries()));
+    connect(d->filterModel, &QAbstractItemModel::modelReset, this, &QAdvancedTableView::updateHeaderViewGeometries);
+    connect(d->filterModel, &QAbstractItemModel::rowsRemoved, this, &QAdvancedTableView::updateHeaderViewGeometries);
 }
 
 void QAdvancedTableView::setFilterProxyModel(QAbstractFilterProxyModel* proxy)
@@ -1046,8 +1046,8 @@ void QAdvancedTableView::setFilterProxyModel(QAbstractFilterProxyModel* proxy)
     ui->dataTableView->setModel(d->dataViewProxy);
     ui->splittedDataTableView->setModel(d->dataViewProxy);
 
-    connect(d->dataViewProxy, SIGNAL(modelReset()), this, SLOT(modelReset()));
-    connect(d->dataViewProxy, SIGNAL(layoutChanged()), this, SLOT(dataModelLayoutChanged()));
+    connect(d->dataViewProxy, &QAbstractItemModel::modelReset, this, &QAdvancedTableView::modelReset);
+    connect(d->dataViewProxy, &QAbstractItemModel::layoutChanged, this, &QAdvancedTableView::dataModelLayoutChanged);
     dataModelLayoutChanged();
 }
 
@@ -1194,7 +1194,7 @@ void QAdvancedTableView::updateHeaderViewGeometries()
         ui->headerTableView->setFixedHeight(ui->headerTableView->horizontalHeader()->sizeHint().height());
     }
 
-    mRowHeight = ui->dataTableView->verticalHeader()->sizeHint().height();
+    // mRowHeight = ui->dataTableView->verticalHeader()->sizeHint().height();
     // ui->fixedRowsTableView->setFixedHeight();
     if (ui->headerTableView->model()->rowCount() > ui->headerTableView->maxVisibileFilterSets()) {
         ui->headerTableView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -1295,7 +1295,7 @@ void QAdvancedTableView::viewEntered(const QModelIndex & index)
 
 void QAdvancedTableView::viewLayoutChanged()
 {
-    QTimer::singleShot(0, this, SLOT(viewLayoutChangedImpl()));
+    QTimer::singleShot(0, this, &QAdvancedTableView::viewLayoutChangedImpl);
 }
 
 void QAdvancedTableView::viewLayoutChangedImpl() {

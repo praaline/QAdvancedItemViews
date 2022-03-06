@@ -121,7 +121,7 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
         // add combo box to column 0
         QComboBox* cb = columnComboBox();
         cb->setCurrentIndex(properties.value("column", index.column()).toInt());
-        connect(cb, SIGNAL(activated(int)), this, SLOT(columnComboBoxActivated(int)));
+        connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::columnComboBoxActivated);
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_COLUMN, cb);
         //
         cb = conditionsComboBox();
@@ -140,7 +140,7 @@ void QConditionalDecorationDialog::setProperties(const QModelIndex & index)
         }
         cb = new QComboBox(this);
         cb->addItems(cIconSets.keys());
-        connect(cb, SIGNAL(currentIndexChanged(QString)), this, SLOT(iconSetComboBoxActivated(QString)));
+        connect(cb, &QComboBox::currentTextChanged, this, &QConditionalDecorationDialog::iconSetComboBoxActivated);
         ui->conditionsTableWidget->setCellWidget(iCondition, COLUMN_SET, cb);
 
         cb->setCurrentIndex(cb->findText(mConditions.at(iCondition).toMap().value("set").toString()));
@@ -168,14 +168,14 @@ void QConditionalDecorationDialog::addPushButtonClicked()
     //
     QComboBox* cb = columnComboBox();
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_COLUMN, cb);
-    connect(cb, SIGNAL(activated(int)), this, SLOT(columnComboBoxActivated(int)));
+    connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::columnComboBoxActivated);
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_CONDITION, conditionsComboBox());
     ValueEdit* ve = valueEdit();
     ve->setColumn(0);
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_EDIT, ve);
     cb = new QComboBox(this);
     cb->addItems(cIconSets.keys());
-    connect(cb, SIGNAL(currentIndexChanged(QString)), this, SLOT(iconSetComboBoxActivated(QString)));
+    connect(cb, &QComboBox::currentTextChanged, this, &QConditionalDecorationDialog::iconSetComboBoxActivated);
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_SET, cb);
     ui->conditionsTableWidget->setCellWidget(ui->conditionsTableWidget->rowCount() - 1, COLUMN_ICON, iconSetComboBox(cb->currentText()));
     ui->conditionsTableWidget->resizeColumnToContents(0);
@@ -287,7 +287,7 @@ QComboBox* QConditionalDecorationDialog::conditionsComboBox()
     cb->addItem(tr("ends with"), QConditionalDecoration::EndsWith);
     cb->addItem(tr("starts not with"), QConditionalDecoration::StartsNotWith);
     cb->addItem(tr("ends not with"), QConditionalDecoration::EndsNotWith);
-    connect(cb, SIGNAL(activated(int)), this, SLOT(comparisonComboBoxActivated(int)));
+    connect(cb, &QComboBox::activated, this, &QConditionalDecorationDialog::comparisonComboBoxActivated);
     return cb;
 }
 
@@ -311,7 +311,7 @@ void QConditionalDecorationDialog::removePushButtonClicked()
 
 QComboBox* QConditionalDecorationDialog::iconSetComboBox(const QString & name)
 {
-    if (!cIconSets.keys().contains(name)) {
+    if (!cIconSets.contains(name)) {
         return 0;
     }
     QComboBox* cb = new QComboBox(this);
@@ -374,7 +374,7 @@ SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWid
     QSingleColumnProxyModel* columnProxy = new QSingleColumnProxyModel(this);
     columnProxy->setSourceModelColumn(column);
     columnProxy->setSourceModel(model);
-    connect(m_columnsComboBox, SIGNAL(activated(int)), columnProxy, SLOT(setSourceModelColumn(int)));
+    connect(m_columnsComboBox, &QComboBox::activated, columnProxy, &QSingleColumnProxyModel::setSourceModelColumn);
 
     QUniqueValuesProxyModel* valueProxy = new QUniqueValuesProxyModel(this);
     valueProxy->setModelColumn(0);
@@ -386,8 +386,8 @@ SelectValueDialog::SelectValueDialog(QAbstractItemModel* model, int column, QWid
     QDialogButtonBox* buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this);
     layout->addWidget(buttonBox);
 
-    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 }
 
 int SelectValueDialog::selectedColumn() const
@@ -435,7 +435,7 @@ ValueEdit::ValueEdit(QAbstractItemModel* model, int column, QWidget *parent) :
     QPushButton* mButton = new QPushButton(this);
     mButton->setFlat(true);
     mButton->setIcon(QIcon(":/qaiv/dialog/table.select"));
-    connect(mButton, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+    connect(mButton, &QAbstractButton::clicked, this, &ValueEdit::buttonClicked);
 
     mLayout->addWidget(m_edit);
     mLayout->addWidget(mButton);

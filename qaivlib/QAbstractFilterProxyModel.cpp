@@ -80,10 +80,10 @@ void QAbstractFilterProxyModel::setFilterModel(QAbstractFilterModel* filterModel
         disconnect(d->filterModel);
     }
     d->filterModel = filterModel;
-    connect(d->filterModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(modelReset()), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(modeChanged(QAdvancedItemViews::FilterProxyMode)), this, SLOT(updateResult()));
-    connect(d->filterModel, SIGNAL(matchModeChanged(QAdvancedItemViews::FilterMatchMode)), this, SLOT(updateResult()));
+    connect(d->filterModel, &QAbstractItemModel::dataChanged, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractItemModel::modelReset, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractFilterModel::modeChanged, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel, &QAbstractFilterModel::matchModeChanged, this, &QAbstractFilterProxyModel::updateResult);
     d->filterModel->setSourceModel(sourceModel());
 }
 
@@ -107,6 +107,7 @@ QModelIndex QAbstractFilterProxyModel::mapDeepFromSource(const QModelIndex &sour
     if (sourceIndex.isValid()) {
         return getIndexForModel(this, sourceIndex);
     }
+    return QModelIndex();
 }
 
 void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
@@ -116,9 +117,9 @@ void QAbstractFilterProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
     }
     QSortFilterProxyModel::setSourceModel(sourceModel);
     d->filterModel->setSourceModel(sourceModel);
-    connect(d->filterModel->sourceModel(), SIGNAL(modelReset()), this, SLOT(updateResult()));
-    connect(d->filterModel->sourceModel(), SIGNAL(rowsInserted(QModelIndex, int , int)), this, SLOT(updateResult()));
-    connect(d->filterModel->sourceModel(), SIGNAL(rowsRemoved(QModelIndex, int , int)), this, SLOT(updateResult()));
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::modelReset, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::rowsInserted, this, &QAbstractFilterProxyModel::updateResult);
+    connect(d->filterModel->sourceModel(), &QAbstractItemModel::rowsRemoved, this, &QAbstractFilterProxyModel::updateResult);
     emitResultCountChanged();
 }
 

@@ -374,7 +374,7 @@ void QAbstractFilterModel::setSourceModel(QAbstractItemModel* model)
 {
     if (model) {
         d->sourceModel = model;
-        connect(d->sourceModel, SIGNAL(layoutChanged()), this, SLOT(sourceModelLayoutChanged()));
+        connect(d->sourceModel, &QAbstractItemModel::layoutChanged, this, &QAbstractFilterModel::sourceModelLayoutChanged);
         emit headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
     }
 }
@@ -387,7 +387,7 @@ QAbstractItemModel* QAbstractFilterModel::sourceModel() const
 void QAbstractFilterModel::sourceModelLayoutChanged()
 {
     if (d->sourceModel) {
-        headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
+        emit headerDataChanged(Qt::Horizontal, 0, d->sourceModel->columnCount() - 1);
     }
 }
 

@@ -80,7 +80,7 @@ QFilterView::QFilterView(QWidget* parent)
     QAbstractButton* cb = findChild<QAbstractButton*>();
     if (cb) {
         cb->disconnect();
-        connect(cb, SIGNAL(clicked()), this, SIGNAL(cornerButtonClicked()));
+        connect(cb, &QAbstractButton::clicked, this, &QFilterView::cornerButtonClicked);
     }
     updateGeometry();
 
@@ -181,31 +181,32 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
         event->ignore();
         return;
     }
-    if (selectedIndexes().isEmpty()) {
+    QModelIndexList selection = selectedIndexes();
+    if (selection.isEmpty()) {
         event->ignore();
         return;
     }
     QMenu* menu = new QMenu(this);
 
-    if (selectedIndexes().size() > 1) {
-        menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, SLOT(enableSelectedFilters()));
-        menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, SLOT(disableSelectedFilters()));
+    if (selection.size() > 1) {
+        menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::enableSelectedFilters);
+        menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::disableSelectedFilters);
         menu->addSeparator();
-        menu->addAction(QIcon(":/qaiv/filter/toggle"), tr("Toggle Filter"), this, SLOT(toggleSelectedFilters()));
+        menu->addAction(QIcon(":/qaiv/filter/toggle"), tr("Toggle Filter"), this, &QFilterView::toggleSelectedFilters);
     } else {
         QAction* action = 0;
-        QVariantMap properties = selectedIndexes().first().data(Qt::EditRole).toMap();
+        QVariantMap properties = selection.first().data(Qt::EditRole).toMap();
         if (properties.isEmpty()){
-            properties["row"] = selectedIndexes().first().row();
-            properties["column"] = selectedIndexes().first().column();
+            properties["row"] = selection.first().row();
+            properties["column"] = selection.first().column();
             properties["enabled"] = true;
-            QVariantList mTypes = selectedIndexes().first().data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
+            QVariantList mTypes = selection.first().data(QAbstractFilterModel::ColumnFilterTypesRole).toList();
             Q_FOREACH(QAbstractFilterModel::FilterTypeEntry entry , m->registeredFilterTypes()) {
                 if (entry.type == QAbstractFilter::Type) {
                     menu->addSeparator();
                 } else {
                     if (mTypes.isEmpty() || mTypes.contains(entry.type)) {
-                        action = menu->addAction(entry.icon, entry.text, this, SLOT(addFilter()));
+                        action = menu->addAction(entry.icon, entry.text, this, &QFilterView::addFilter);
                         properties["type"] = entry.type;
                         action->setData(properties);
                         action->setToolTip(entry.tooltip);
@@ -213,15 +214,15 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
                 }
             }
         } else {
-            m->filter(selectedIndexes().first())->addContextMenuActions(menu, this);
+            m->filter(selection.first())->addContextMenuActions(menu, this);
             if (!menu->isEmpty()) {
                 menu->addSeparator();
             }
             if (properties.value("enabled").toBool()) {
-                action = menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, SLOT(changeProperties()));
+                action = menu->addAction(QIcon(":/qaiv/filter/disabled"), tr("Disable Filter"), this, &QFilterView::changeProperties);
                 properties["enabled"] = false;
             } else {
-                action = menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, SLOT(changeProperties()));
+                action = menu->addAction(QIcon(":/qaiv/filter/enabled"), tr("Enable Filter"), this, &QFilterView::changeProperties);
                 properties["enabled"] = true;
             }
             action->setData(properties);
@@ -229,12 +230,12 @@ void QFilterView::contextMenuEvent(QContextMenuEvent* event)
                 menu->addSeparator();
                 QPixmap pixmap(22, 22);
                 pixmap.fill(qvariant_cast<QColor>(properties.value("highlightColor")));
-                action = menu->addAction(tr("Change Color..."), this, SLOT(changeColor()));
+                action = menu->addAction(tr("Change Color..."), this, &QFilterView::changeColor);
                 action->setIcon(QIcon(pixmap));
                 action->setData(properties);
             }
             menu->addSeparator();
-            action = menu->addAction(tr("Remove filter"), this, SLOT(removeFilter()));
+            action = menu->addAction(tr("Remove filter"), this, &QFilterView::removeFilter);
             action->setData(properties);
         }
     }
@@ -321,9 +322,9 @@ void QFilterView::setMaxVisibileFilterSets(int rows)
 void QFilterView::setModel(QAbstractItemModel* model)
 {
     QTableView::setModel(model);
-    connect(model, SIGNAL(modelReset()), this, SIGNAL(calcGeometryRequested()));
-    connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SIGNAL(calcGeometryRequested()));
-    connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SIGNAL(calcGeometryRequested()));
+    connect(model, &QAbstractItemModel::modelReset, this, &QFilterView::calcGeometryRequested);
+    connect(model, &QAbstractItemModel::rowsInserted, this, &QFilterView::calcGeometryRequested);
+    connect(model, &QAbstractItemModel::rowsRemoved, this, &QFilterView::calcGeometryRequested);
     //    calcGeometry();
     updateGeometry();
 }

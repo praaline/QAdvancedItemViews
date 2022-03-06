@@ -194,6 +194,8 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
 {
     QByteArray suffix;
 
+    if (!d->device) return false;
+
     if (d->device && d->format.isEmpty()) {
         if (QFile *file = qobject_cast<QFile *>(d->device)) {
             suffix = QFileInfo(file->fileName()).suffix().toLower().toLatin1();
@@ -243,6 +245,8 @@ bool QTableModelWriter::write(QAdvancedTableView* view, bool all)
 bool QTableModelWriter::write(QTableView* view, bool all)
 {
     QByteArray suffix;
+
+    if (!d->device) return false;
 
     if (d->device && d->format.isEmpty()) {
         if (QFile *file = qobject_cast<QFile *>(d->device)){

@@ -45,7 +45,7 @@ QRegExpFilterEditor::QRegExpFilterEditor(QWidget* parent)
     l->addWidget(m_patternEdit);
 
     m_sensitivityLabel = new QClickableLabel(this);
-    connect(m_sensitivityLabel, SIGNAL(clicked(Qt::MouseButtons)), this, SLOT(sensitivityLabelClicked(Qt::MouseButtons)));
+    connect(m_sensitivityLabel, &QClickableLabel::clicked, this, &QRegExpFilterEditor::sensitivityLabelClicked);
     l->addWidget(m_sensitivityLabel);
 
     setFocusProxy(m_patternEdit);

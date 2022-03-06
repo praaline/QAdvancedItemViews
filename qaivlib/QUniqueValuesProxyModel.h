@@ -82,13 +82,17 @@ public:
      * @reimp QSortFilterProxyModel::setSourceModel()
      */
     void setSourceModel(QAbstractItemModel* sourceModel);
+
 signals:
     void progressChanged(int progress);
+
 private slots:
-    bool isDuplicate(int row) const;
     void buildMap();
     void sourceModelDataChanged(const QModelIndex & topLeft, const QModelIndex & bottomRight);
+
 private:
+    bool isDuplicate(int row) const;
+
     QUniqueValuesProxyModelPrivate* d;
 };
 

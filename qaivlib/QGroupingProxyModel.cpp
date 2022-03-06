@@ -507,10 +507,10 @@ void QGroupingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
     d->sourceModel = sourceModel;
     buildGroups();
-    connect(d->sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChangedHandler(QModelIndex,QModelIndex)));
-    connect(d->sourceModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)), this, SLOT(rowsAboutToBeInsertedHandler(QModelIndex,int,int)));
-    connect(d->sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInsertedHandler(QModelIndex,int,int)));
-    connect(d->sourceModel, SIGNAL(modelReset()), this, SLOT(sourceModelResetHandler()));
+    connect(d->sourceModel, &QAbstractItemModel::dataChanged, this, &QGroupingProxyModel::dataChangedHandler);
+    connect(d->sourceModel, &QAbstractItemModel::rowsAboutToBeInserted, this, &QGroupingProxyModel::rowsAboutToBeInsertedHandler);
+    connect(d->sourceModel, &QAbstractItemModel::rowsInserted, this, &QGroupingProxyModel::rowsInsertedHandler);
+    connect(d->sourceModel, &QAbstractItemModel::modelReset, this, &QGroupingProxyModel::sourceModelResetHandler);
 }
 
 void QGroupingProxyModel::setUngroupedItemTitle(const QString & title)

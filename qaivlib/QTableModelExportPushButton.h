@@ -21,9 +21,10 @@ public:
 signals:
     void exportAllTriggered(const QByteArray & format);
     void exportSelectionTriggered(const QByteArray & format);
+
 private slots:
-    void exportAllTriggered();
-    void exportSelectionTriggered();
+    void exportAllTriggeredImpl();
+    void exportSelectionTriggeredImpl();
 };
 
 #endif // QTABLEMODELEXPORTPUSHBUTTON_H

@@ -42,11 +42,11 @@ QValueFilterEditor::QValueFilterEditor(QWidget* parent) :
     mLayout->addWidget(m_valueLineEdit);
 
     m_sensitivityLabel = new QClickableLabel(this);
-    connect(m_sensitivityLabel, SIGNAL(clicked(Qt::MouseButtons)), this, SLOT(sensitivityLabelClicked(Qt::MouseButtons)));
+    connect(m_sensitivityLabel, &QClickableLabel::clicked, this, &QValueFilterEditor::sensitivityLabelClicked);
     mLayout->addWidget(m_sensitivityLabel);
 
     m_matchFlagsLabel = new QClickableLabel(this);
-    connect(m_matchFlagsLabel, SIGNAL(clicked(Qt::MouseButtons)), this, SLOT(matchFlagsLabelClicked(Qt::MouseButtons)));
+    connect(m_matchFlagsLabel, &QClickableLabel::clicked, this, &QValueFilterEditor::matchFlagsLabelClicked);
     mLayout->addWidget(m_matchFlagsLabel);
 
     setFocusProxy(m_valueLineEdit);
