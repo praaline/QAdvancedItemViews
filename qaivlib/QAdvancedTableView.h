@@ -330,7 +330,7 @@ public:
     /**
      * @reimp QWidget::minimumSizeHint()
      */
-    QSize minimumSizeHint() const;
+    QSize minimumSizeHint() const override;
     /**
       * Returns the model used by this view.
       */
@@ -492,20 +492,20 @@ public:
      */
     void setWordWrap(bool wrap);
     /**
-      * Returns true if the filter are shown. Otherwise false.
+      * Returns true if the filters are shown. Otherwise false.
       * @see setShowFilter()
       */
     bool showFilter() const;
     /**
-     * Returns true if the show is shwon. Otherwise false.
+     * Returns true if the grid is shwon. Otherwise false.
      * @see setShowFilter()
      */
     bool showGrid() const;
     /**
-      * Returns true if the filter are shown. Otherwise false.
+      * sizeHint reimplementation
       * @see setShowFilter()
       */
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
     /**
       * Sorts the model by the values in the given @p column in the given @p order.
       * @see sortingEnabled

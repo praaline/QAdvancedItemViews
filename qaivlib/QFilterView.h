@@ -64,7 +64,7 @@ public:
 
     void setMaxVisibileFilterSets(int rows);
 
-    void setModel(QAbstractItemModel* model);
+    void setModel(QAbstractItemModel* model) override;
 
     void toggleFilter(const QModelIndex & index);
 

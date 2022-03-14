@@ -79,7 +79,7 @@ signals:
 
 protected:
     void emitResultCountChanged();
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const = 0;
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex & source_parent) const override = 0;
 
 private slots:
     void updateResult();
